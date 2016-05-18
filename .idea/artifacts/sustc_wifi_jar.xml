@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="sustc_wifi:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/sustc_wifi_jar</output-path>
+    <root id="archive" name="sustc_wifi.jar">
+      <element id="module-output" name="sustc_wifi" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../java driver/httpcomponents-client-4.5.2/lib/httpclient-4.5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../java driver/httpcomponents-client-4.5.2/lib/httpcore-4.4.4.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
