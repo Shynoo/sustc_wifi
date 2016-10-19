@@ -1,4 +1,4 @@
-package sample;
+package cn.sustc.edu.wifi;
 
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -21,18 +21,23 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LogIn extends Thread{
+@SuppressWarnings("deprecated")
+public final class LogIn {
     private static String usernamme;
     private static String password;
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
     private static String location=null;
-    private static final String mo="~~~~~~~~~~";
-    public static void setDefaultHeader(HttpRequestBase httpGet){
+    private static final String mo="**********";
+
+    private static volatile boolean hasConnected=false;
+
+    public synchronized static void setDefaultHeader(HttpRequestBase httpGet){
         HttpParams params = new BasicHttpParams();
         params.setParameter("http.protocol.handle-redirects", false);
         httpGet.setParams(params);
     }
-    public static boolean isNetWorking() {
+
+    public synchronized static boolean isNetWorking() {
         try {
             HttpGet httpget = new HttpGet("http://www.baidu.com");
             setDefaultHeader(httpget);
@@ -40,7 +45,14 @@ public class LogIn extends Thread{
             try {
                 response= httpClient.execute(httpget);
                 if (response.getStatusLine().getStatusCode()==200){
-                    System.out.println(time()+"Connected");
+                    if (hasConnected){
+
+                    }
+                    else {
+                        System.out.println(time() + "Connected");
+                        hasConnected=true;
+                    }
+                    return true;
                 }
                 else{
                     if (response.getFirstHeader("Location")!=null){
@@ -109,7 +121,7 @@ public class LogIn extends Thread{
 //
 //    }
 //
-    public static void logIn(String username,char[] password){
+    public synchronized static void logIn(String username,char[] password){
         HttpGet httpGet=newGetRequest(location);
         String data;
         try {
@@ -150,13 +162,14 @@ public class LogIn extends Thread{
                 httpClient.execute(httpPost);
             }
             else {
-                System.out.println("\nError");
-                System.out.println(data);
+                System.err.println("\nError");
+                System.err.println(data);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public static String text(CloseableHttpResponse response){
         StringBuffer sb=new StringBuffer();
         try {
@@ -171,28 +184,12 @@ public class LogIn extends Thread{
         }
         return sb.toString();
     }
+
     public static String time(){
         return TimeLog.timeInfo();
     }
-    public static void main(String[] args) {
-        if (args.length==2&&args[0].length()==8&&args[0].compareTo("11110000")>0&&args[1].length()>=6) {
-            usernamme=args[0];
-            password=args[1];
-            System.out.println(mo+"SUSTC_WIFI v0.1-beta "+mo);
-            System.out.println(TimeLog.timeInfo() + "Starting...");
-            while (true) {
-                try {
-                    isNetWorking();
-                    sleep(2000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        else {
-            System.out.println("请输入你的学号和密码,我们绝不会以任何方式记录你的密码!");
-            System.out.println("一个合法的输入示例为: java -jar C:\\\\sustc_wifi.jar 11310888 qwer1234");
-        }
 
-    }
+
+
+
 }
