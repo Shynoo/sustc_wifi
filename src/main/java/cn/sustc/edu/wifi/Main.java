@@ -3,24 +3,30 @@ package cn.sustc.edu.wifi;
 import java.util.concurrent.TimeUnit;
 
 import static cn.sustc.edu.wifi.LogIn.isNetWorking;
-
+import static cn.sustc.edu.wifi.LogIn.username;
+import static cn.sustc.edu.wifi.LogIn.password;
 /**
  * Created by Darain on 2016/10/19.
  */
 public class Main {
-    private static String username;
-    private static String password;
     private static final String mo="**********";
     public static void main(String[] args) {
-        if (args.length==2&&args[0].length()==8&&args[0].compareTo("11110000")>0&&args[1].length()>=6) {
-            username=args[0];
-            password=args[1];
+        LogIn.username=Config.WIFI.get("username");
+        LogIn.password=Config.WIFI.get("password");
+        if (username.length()==8&&username.compareTo("11110000")>0&&password.length()>=6) {
             System.out.println(mo+"SUSTC_WIFI v0.1.2_beta "+mo);
             System.out.println(TimeLog.timeInfo() + "Starting...");
+            long delay;
+            try {
+                delay=Long.valueOf(Config.WIFI.get("delay"));
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+                delay=2000;
+            }
             while (true) {
                 try {
                     isNetWorking();
-                    TimeUnit.MILLISECONDS.sleep(2000);
+                    TimeUnit.MILLISECONDS.sleep(delay);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

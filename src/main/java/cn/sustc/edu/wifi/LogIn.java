@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("deprecated")
 public final class LogIn {
-    private static String usernamme;
-    private static String password;
+    static String username;
+    static String password;
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
     private static String location=null;
     private static final String mo="**********";
@@ -55,6 +55,7 @@ public final class LogIn {
                     return true;
                 }
                 else{
+                    hasConnected=false;
                     if (response.getFirstHeader("Location")!=null){
                         location=response.getFirstHeader("Location").getValue();
                         if (location.contains("baidu.com")){
@@ -95,7 +96,7 @@ public final class LogIn {
         return httpGet;
     }
     private static void logIn(){
-        logIn(usernamme,password.toCharArray());
+        logIn(username,password.toCharArray());
     }
 
 //    public static void post(){
@@ -163,7 +164,7 @@ public final class LogIn {
             }
             else {
                 System.err.println("\nError");
-                System.err.println(data);
+//                System.err.println(data);
             }
         } catch (IOException e) {
             e.printStackTrace();
